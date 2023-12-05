@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 import '../Api/apidigidex.dart';
 
 class ListDigi extends StatefulWidget {
@@ -11,13 +13,21 @@ class ListDigi extends StatefulWidget {
 }
 
 class _ListDigiState extends State<ListDigi> {
-  List<Map<String, dynamic>> listInfosDigi = [];
+  Map<String, dynamic> dataMap = new Map();
+  bool recupDataBool = false;
+  int id = 1;
 
-  @override
-  void initState() {
-    super.initState();
-    researchListInfosDigi();
+  Future<void> recupDataJson() async {
+    String url = "https://digi-api.com/api/v1/digimon/" + this.id.toString();
+    var reponse = await http.get(Uri.parse(url));
+    if (reponse.statusCode == 200) {
+      dataMap = convert.jsonDecode(reponse.body);
+      recupDataBool = true;
+    } else {
+      recupDataBool = false;
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +51,12 @@ class _ListDigiState extends State<ListDigi> {
                   columns: [
                     DataColumn(label: Text('N°')),
                     DataColumn(label: Text('Nom')),
-                    DataColumn(label: Text('Image')),
                   ],
                   rows: [
-                    for (int i = 1; i < listInfosDigi.length; i++)
+                    for (id = 0; id < 1422 -1; id++)
                       DataRow(cells: [
-                        DataCell(Text('${i + 1}')),
-                        DataCell(Text("${listInfosDigi[i]['name']}")),
-                        DataCell(Text("${listInfosDigi[i]['image']}")),
+                        DataCell(Text('${id + 1}')),
+                        DataCell(Text("${dataMap['name']}")),//va être null faut trouver astuce
                       ]),
                   ],
                 ),
@@ -58,11 +66,5 @@ class _ListDigiState extends State<ListDigi> {
         ));
   }
 
-  Future<void> researchListInfosDigi() async {
-    var list = await getListDigi();
 
-    setState(() {
-      listInfosDigi = list as List<Map<String, dynamic>>;
-    });
-  }
 }
