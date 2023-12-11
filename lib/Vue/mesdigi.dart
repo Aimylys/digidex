@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 import '../Api/apidigidex.dart';
 
 class MesDigi extends StatefulWidget {
@@ -11,12 +13,29 @@ class MesDigi extends StatefulWidget {
 }
 
 class _MesDigiState extends State<MesDigi> {
-  List<Map<String, dynamic>> listInfosDigi = [];
+  Map<String, dynamic> dataMap = new Map();
+  List<Map<String, dynamic>> _madataList = [];
+  bool recupDataBool = false;
+  int id = 1;
 
-  @override
-  void initState() {
-    super.initState();
-    researchListInfosDigi();
+  List<Map<String, dynamic>> madatalist() {
+    return _madataList;
+}
+
+
+  Future<void> recupDataJson(int id) async {
+    String url = "https://digi-api.com/api/v1/digimon/" + id.toString();
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      setState(() {
+        dataMap = convert.jsonDecode(response.body);
+        recupDataBool = true;
+      });
+    } else {
+      setState(() {
+        recupDataBool = false;
+      });
+    }
   }
 
   @override
@@ -30,39 +49,31 @@ class _MesDigiState extends State<MesDigi> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(children: [
-              //Padding(padding: EdgeInsets.only(top: 30)),
-              Text(
-                'Mes Digimons',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              DataTable(
-                columns: [
-                  DataColumn(label: Text('N°')),
-                  DataColumn(label: Text('Nom')),
-                  DataColumn(label: Text('Image')),
-                ],
-                rows: [
-                  for (int i = 1; i < listInfosDigi.length; i++)
-                    DataRow(cells: [
-                      DataCell(Text('${i + 1}')),
-                      DataCell(Text("${listInfosDigi[i]['name']}")),
-                      DataCell(Text("${listInfosDigi[i]['image']}")),
-                    ]),
-                ],
-              ),
-            ])
+            Column(
+              children: [
+                Text(
+                  'Liste des Digimons',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 20),
+                DataTable(
+                  columns: [
+                    DataColumn(label: Text('N°')),
+                    DataColumn(label: Text('Nom')),
+                  ],
+                  rows: [
+                    for (int i = 0; i < _madataList.length -1; i++)
+                      DataRow(cells: [
+                        DataCell(Text('${i + 1}')),
+                        DataCell(Text("${_madataList[i + 1]['name']}")),
+                      ]),
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
-  }
-  Future<void> researchListInfosDigi() async {
-    var list = await getListDigi();
-
-    setState(() {
-      listInfosDigi = list as List<Map<String, dynamic>>;
-    });
   }
 }

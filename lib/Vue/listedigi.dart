@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-import '../Api/apidigidex.dart';
 
 class ListDigi extends StatefulWidget {
   const ListDigi({Key? key, required this.title}) : super(key: key);
@@ -13,35 +12,46 @@ class ListDigi extends StatefulWidget {
 }
 
 class _ListDigiState extends State<ListDigi> {
-  Map<String, dynamic> dataMap = new Map();
+  List<Map<String, dynamic>> dataList = [];
   bool recupDataBool = false;
   int id = 1;
 
-  Future<void> recupDataJson() async {
-    String url = "https://digi-api.com/api/v1/digimon/" + this.id.toString();
-    var reponse = await http.get(Uri.parse(url));
-    if (reponse.statusCode == 200) {
-      dataMap = convert.jsonDecode(reponse.body);
-      recupDataBool = true;
+  Future<void> recupDataJson(int id) async {
+    String url = "https://digi-api.com/api/v1/digimon/" + id.toString();
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      setState(() {
+        dataList.add(convert.jsonDecode(response.body));
+        recupDataBool = true;
+      });
     } else {
-      recupDataBool = false;
+      setState(() {
+        recupDataBool = false;
+      });
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    for (id = 1; id <= 1422; id++) {
+      recupDataJson(id);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: SingleChildScrollView(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(children: [
-                //Padding(padding: EdgeInsets.only(top: 30)),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: SingleChildScrollView(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
                 Text(
                   'Liste des Digimons',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -53,18 +63,18 @@ class _ListDigiState extends State<ListDigi> {
                     DataColumn(label: Text('Nom')),
                   ],
                   rows: [
-                    for (id = 0; id < 1422 -1; id++)
+                    for (int i = 0; i < dataList.length -1; i++)
                       DataRow(cells: [
-                        DataCell(Text('${id + 1}')),
-                        DataCell(Text("${dataMap['name']}")),//va être null faut trouver astuce
+                        DataCell(Text('${i + 1}')),
+                        DataCell(Text("${dataList[i + 1]['name']}")),
                       ]),
                   ],
                 ),
-              ])
-            ],
-          ),
-        ));
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
-
-
 }

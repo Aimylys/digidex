@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'mesdigi.dart';
 
 class AffichePage extends StatefulWidget {
   const AffichePage({Key? key, required this.title}) : super(key: key);
@@ -11,6 +12,7 @@ class AffichePage extends StatefulWidget {
 
 class _AffichePageState extends State<AffichePage> {
   Map<String, dynamic> dataMap = new Map();
+  List<Map<String, dynamic>> _madataList = [];
 
   Widget afficheData() {
     Column contenu = Column(
@@ -54,8 +56,7 @@ class _AffichePageState extends State<AffichePage> {
           const Padding(padding: EdgeInsets.only(bottom: 50)),
           ElevatedButton(
               onPressed: () {
-                //tabdigimoi.add(dataMap['name'].toString());
-                Navigator.pushNamed(context, '/afficher');
+                _madataList.add(dataMap['id']);
               },
               child:
                   const Text("Ajouter", style: TextStyle(color: Colors.black)),
