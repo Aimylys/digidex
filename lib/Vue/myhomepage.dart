@@ -186,19 +186,17 @@ class _MyHomeState extends StatelessWidget {
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith(
                           (states) => Colors.deepOrange))),
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Image.asset(
-                            'assets/images/teambasecran.png',
-                            fit: BoxFit.contain,
-                            height: 200,
-                          )
-                        ]),
-                  ]),
+              Expanded(
+                      child: Container(), // Utilisez ce conteneur pour occuper l'espace disponible
+                    ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Image.asset(
+                  'assets/images/teambasecran.png',
+                  fit: BoxFit.contain,
+                  height: 200,
+                ),
+              ),
             ],
           ),
         ));
