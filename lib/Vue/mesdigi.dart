@@ -7,12 +7,14 @@ class MesDigi extends StatefulWidget {
   const MesDigi({Key? key, required this.title}) : super(key: key);
 
   final String title;
+  static MesDigiState of(BuildContext context) =>
+      context.findAncestorStateOfType<MesDigiState>()!;
 
   @override
-  State<MesDigi> createState() => _MesDigiState();
+  State<MesDigi> createState() => MesDigiState();
 }
 
-class _MesDigiState extends State<MesDigi> {
+class MesDigiState extends State<MesDigi> {
   Map<String, dynamic> dataMap = new Map();
   List<Map<String, dynamic>> _madataList = [];
   bool recupDataBool = false;
@@ -22,6 +24,13 @@ class _MesDigiState extends State<MesDigi> {
     return _madataList;
 }
 
+  void ajouterDigi(int id, String nom) {
+    _madataList.add({
+      'id': id,
+      'numero': _madataList.length + 1,
+      'nom': nom,
+    });
+  }
 
   Future<void> recupDataJson(int id) async {
     String url = "https://digi-api.com/api/v1/digimon/" + id.toString();
@@ -41,8 +50,10 @@ class _MesDigiState extends State<MesDigi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Colors.orangeAccent,
       ),
       body: SingleChildScrollView(
         child: Row(

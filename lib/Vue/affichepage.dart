@@ -56,7 +56,9 @@ class _AffichePageState extends State<AffichePage> {
           const Padding(padding: EdgeInsets.only(bottom: 50)),
           ElevatedButton(
               onPressed: () {
-                _madataList.add(dataMap['id']);
+                // Appel de la fonction ajouterDigi
+                MesDigiState mesDigiState = MesDigi.of(context);
+                mesDigiState.ajouterDigi(dataMap['id'], dataMap['name'].toString());
               },
               child:
                   const Text("Ajouter", style: TextStyle(color: Colors.black)),

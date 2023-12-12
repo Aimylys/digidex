@@ -81,7 +81,18 @@ class _RechercheState extends State<Recherche> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Padding(padding: EdgeInsets.only(top: 50)),
+                   Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Image.asset(
+                          'assets/images/soleil.png',
+                          fit: BoxFit.contain,
+                          height: 300,
+                        ),
+                      ]),
+
+              const Padding(padding: EdgeInsets.only(top: 100)),
               SizedBox(
                   width: MediaQuery.of(context).size.width * 0.90,
                   child: TextFormField(
